@@ -59,3 +59,4 @@ target/
 # csv file generated from the data collected from the machine, in
 # which the performance analysis is intended
 *.csv
+*~
