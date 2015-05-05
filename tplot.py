@@ -12,7 +12,9 @@ import numpy as np
 import os
 import sys
 import argparse
+import socket
 import matplotlib.pyplot as plt
+from tplotClient import connect_to_server
 
 csv_header = ['PID','USER','PR','NI','VIRT','RES','SHR','S','%CPU','%MEM','TIME+','COMMAND']
 csv_dtypes = "i8,|S10,|S3,f8,|S5,|S5,|S5,|S5,f8,f8,|S10,|S10"
@@ -95,7 +97,7 @@ def parse_data(data, field, entries, item):
 
 def plot_graphic(x, y, gtype):
     plt.plot(x, y, '-', x, y, gtype)
-    plt.show()
+    plt.draw()
 
 
 def option_parser():
@@ -152,20 +154,42 @@ def main():
     itm  = options.item
     aentry = []
 
-    if not os.path.exists(fname):
-        print "File not found"
-        sys.exit(1)
-
-    data, pdata = get_data(fname, csv_header, csv_dtypes)
-
     plt.xlabel(xfld)
     plt.ylabel(yfld)
     plt.title("%s vs %s for %s" %(xfld,yfld,itm))
 
-    yentry, yplot = parse_data(data, yfld, aentry, itm)
-    xentry, xplot = parse_data(data, xfld, yentry, itm)
+    if os.path.exists(fname):
+        data, pdata = get_data(fname, csv_header, csv_dtypes)
+        yentry, yplot = parse_data(data, yfld, aentry, itm)
+        xentry, xplot = parse_data(data, xfld, yentry, itm)
 
-    plot_graphic(xplot, yplot, 'ro')
+        plot_graphic(xplot, yplot, 'ro')
+
+    else:
+        print "%s File not found" % fname
+        # get local machine name
+        host = socket.gethostname()
+        port = 9999
+
+        cli = connect_to_server(host, port)
+
+        while True:
+            # Receive no more than 1024 bytes
+            data = cli.recv(1024)
+            reply = 'OK'
+
+            if not data:
+                break
+
+            data = data.split('END')[0]
+
+            yentry, yplot = parse_data(data, yfld, aentry, itm)
+            xentry, xplot = parse_data(data, xfld, yentry, itm)
+
+            plot_graphic(xplot, yplot, 'ro')
+
+        cli.close()
+
 
 
 if __name__ == "__main__":
