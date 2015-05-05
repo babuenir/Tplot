@@ -97,14 +97,15 @@ def procParser(procstat, path):
     stime               = procstat.get_procdata(proclist, 'stime')
     cutime              = procstat.get_procdata(proclist, 'cutime')
     cstime              = procstat.get_procdata(proclist, 'cstime')
-    procstat.data.tm    = utime
+    procstat.data.tm    = float(format(float(utime), '.2f'))
     cmd                 = str(procstat.get_procdata(proclist, 'comm'))
     procstat.data.cmd   = cmd[cmd.index("(") + 1:cmd.rindex(")")]
     starttime           = procstat.get_procdata(proclist, 'starttime')
     total_time          = utime + stime + cutime + cstime
     uptime              = float(format(float(uptime[0]), '.2f'))
     seconds             = uptime - (starttime / procstat.hz)
-    procstat.data.cpu   = 100 * ((total_time / procstat.hz) / seconds)
+    cpu                 = 100 * ((total_time / procstat.hz) / seconds)
+    procstat.data.cpu   = float(format(float(cpu), '.2f'))
     procstat.data.mem   = 0 # FIXME
 
     return procstat.data
