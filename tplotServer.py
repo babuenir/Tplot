@@ -38,7 +38,7 @@ def send_data(client, data):
                                                        data.mem,
                                                        data.tm,
                                                        data.cmd)
-    client.send(datastr)
+    client.send(datastr + 'END')
 
 
 def main():
