@@ -13,17 +13,22 @@ def connect_to_server(host, port):
 def main():
     # get local machine name
     host = socket.gethostname()
-    port = 2345
+    port = 9999
 
-    try:
-        cli = connect_to_server(host, port)
-        # Receive no more than 1024 bytes
-        while True:
-            data = cli.recv(1024)
-            print "Data from server %s\n", data
+    cli = connect_to_server(host, port)
 
-    finally:
-        cli.close()
+    while True:
+       # Receive no more than 1024 bytes
+       data = cli.recv(1024)
+       reply = 'OK'
+
+       if not data:
+           break
+
+       print data
+       #cli.sendall(reply)
+
+    cli.close()
 
 
 if __name__ == "__main__":

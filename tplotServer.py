@@ -1,4 +1,5 @@
 import glob
+import os
 import socket
 import csv
 import procParse
@@ -12,7 +13,7 @@ def create_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = socket.gethostname()
     # port is 2345 for convenience.
-    port = 2345
+    port = 9999
     server.bind((host, port))
     server.listen(5)
 
@@ -44,15 +45,16 @@ def main():
     srv = create_server()
     ps = procParse.procStat('proc')
 
-    while True:
-        # establish a connection
-        cli, addr = srv.accept()
-        print("Got a connection from %s" % str(addr))
+    # establish a connection
+    cli, addr = srv.accept()
+    print("Got a connection from %s" % str(addr))
 
+    while True:
         # send parsed data here.
         for fp in glob.glob('/proc/[0-9]*/'):
-            topcsv = procParser(ps, fp)
-            send_data(cli, topcsv)
+            if os.path.exists(fp):
+               topcsv = procParser(ps, fp)
+               send_data(cli, topcsv)
 
 
 if __name__ == "__main__":
