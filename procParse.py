@@ -45,7 +45,7 @@ class procStat:
         return self.proclist
 
     def get_procdata(self, proclist, field=0):
-        if field == 0:
+        if type(field) is int:
             self.procdata = int(proclist[field])
         elif field == 'state' or field == 'comm':
             field_id = self.statfld.index(field)
@@ -88,9 +88,9 @@ def procParser(procstat, path):
     procstat.data.pr    = procstat.get_procdata(proclist, 'priority')
     procstat.data.ni    = procstat.get_procdata(proclist, 'nice')
     vir                 = procstat.get_procdata(proclist, 'vsize')
-    procstat.data.vir   = procstat.sizeof_fmt(procstat.mem_in_bytes(vir))
+    procstat.data.vir   = procstat.sizeof_fmt(vir)
     procstat.data.res   = procstat.get_procdata(proclist, 'rss')
-    shr                 = procstat.get_procdata(shr_mem)
+    shr                 = procstat.get_procdata(shr_mem, 2)
     procstat.data.shr   = procstat.sizeof_fmt(procstat.mem_in_bytes(shr))
     procstat.data.S     = str(procstat.get_procdata(proclist, 'state'))
     utime               = procstat.get_procdata(proclist, 'utime')
