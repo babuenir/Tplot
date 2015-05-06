@@ -31,8 +31,8 @@ class procStat:
                         'delayacct_blkio_ticks', 'guest_time',
                         'cguest_time']
 
-        self.data =  namedtuple('Psdata',
-                                'pid user pr ni vir res shr S cpu mem tm cmd')
+        self.data = namedtuple('Psdata',
+                               'pid user pr ni vir res shr S cpu mem tm cmd')
 
         self.pgsize = os.sysconf(os.sysconf_names['SC_PAGE_SIZE'])
         self.hz = os.sysconf(os.sysconf_names['SC_CLK_TCK'])
@@ -71,7 +71,7 @@ class procStat:
         return self.user
 
     def sizeof_fmt(self, num):
-        for unit in ['','K','M','G','T','P','E','Z']:
+        for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
             if abs(num) < 1024.0:
                 return "%3.1f%s" % (num, unit)
             num /= 1024.0
@@ -81,31 +81,31 @@ class procStat:
 def procParser(procstat, path):
     proclist = procstat.get_proclist(path + 'stat')
     userpath = path + 'status'
-    shr_mem  = procstat.get_proclist(path + 'statm')
-    uptime   = procstat.get_proclist(path + '../uptime')
-    procstat.data.pid   = procstat.get_procdata(proclist, 'pid')
-    procstat.data.user  = procstat.get_user(userpath)
-    procstat.data.pr    = procstat.get_procdata(proclist, 'priority')
-    procstat.data.ni    = procstat.get_procdata(proclist, 'nice')
-    vir                 = procstat.get_procdata(proclist, 'vsize')
-    procstat.data.vir   = procstat.sizeof_fmt(vir)
-    procstat.data.res   = procstat.get_procdata(proclist, 'rss')
-    shr                 = procstat.get_procdata(shr_mem, 2)
-    procstat.data.shr   = procstat.sizeof_fmt(procstat.mem_in_bytes(shr))
-    procstat.data.S     = str(procstat.get_procdata(proclist, 'state'))
-    utime               = procstat.get_procdata(proclist, 'utime')
-    stime               = procstat.get_procdata(proclist, 'stime')
-    cutime              = procstat.get_procdata(proclist, 'cutime')
-    cstime              = procstat.get_procdata(proclist, 'cstime')
-    procstat.data.tm    = float(format(float(utime), '.2f'))
-    cmd                 = str(procstat.get_procdata(proclist, 'comm'))
-    procstat.data.cmd   = cmd[cmd.index("(") + 1:cmd.rindex(")")]
-    starttime           = procstat.get_procdata(proclist, 'starttime')
-    total_time          = utime + stime + cutime + cstime
-    uptime              = float(format(float(uptime[0]), '.2f'))
-    seconds             = uptime - (starttime / procstat.hz)
-    cpu                 = 100 * ((total_time / procstat.hz) / seconds)
-    procstat.data.cpu   = float(format(float(cpu), '.2f'))
-    procstat.data.mem   = 0 # FIXME
+    shr_mem = procstat.get_proclist(path + 'statm')
+    uptime = procstat.get_proclist(path + '../uptime')
+    procstat.data.pid = procstat.get_procdata(proclist, 'pid')
+    procstat.data.user = procstat.get_user(userpath)
+    procstat.data.pr = procstat.get_procdata(proclist, 'priority')
+    procstat.data.ni = procstat.get_procdata(proclist, 'nice')
+    vir = procstat.get_procdata(proclist, 'vsize')
+    procstat.data.vir = procstat.sizeof_fmt(vir)
+    procstat.data.res = procstat.get_procdata(proclist, 'rss')
+    shr = procstat.get_procdata(shr_mem, 2)
+    procstat.data.shr = procstat.sizeof_fmt(procstat.mem_in_bytes(shr))
+    procstat.data.S = str(procstat.get_procdata(proclist, 'state'))
+    utime = procstat.get_procdata(proclist, 'utime')
+    stime = procstat.get_procdata(proclist, 'stime')
+    cutime = procstat.get_procdata(proclist, 'cutime')
+    cstime = procstat.get_procdata(proclist, 'cstime')
+    procstat.data.tm = float(format(float(utime), '.2f'))
+    cmd = str(procstat.get_procdata(proclist, 'comm'))
+    procstat.data.cmd = cmd[cmd.index("(") + 1:cmd.rindex(")")]
+    starttime = procstat.get_procdata(proclist, 'starttime')
+    total_time = utime + stime + cutime + cstime
+    uptime = float(format(float(uptime[0]), '.2f'))
+    seconds = uptime - (starttime / procstat.hz)
+    cpu = 100 * ((total_time / procstat.hz) / seconds)
+    procstat.data.cpu = float(format(float(cpu), '.2f'))
+    procstat.data.mem = 0  # FIXME
 
     return procstat.data

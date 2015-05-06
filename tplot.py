@@ -5,7 +5,7 @@ The purpose of this module is to plot the data as a graph/chart for
 further analysis.
 
 Usage:
-  $ python top-plot.py
+  $ python tplot.py
 
 """
 import numpy as np
@@ -16,8 +16,11 @@ import socket
 import matplotlib.pyplot as plt
 from tplotClient import connect_to_server
 
-csv_header = ['PID','USER','PR','NI','VIRT','RES','SHR','S','%CPU','%MEM','TIME+','COMMAND']
+csv_header = ['PID', 'USER', 'PR', 'NI', 'VIRT', 'RES', 'SHR', 'S',
+              '%CPU', '%MEM', 'TIME+', 'COMMAND']
+
 csv_dtypes = "i8,|S10,|S3,f8,|S5,|S5,|S5,|S5,f8,f8,|S10,|S10"
+
 
 def get_data(filename, header, dtypes):
     """ get_data function of module top-plot.
@@ -34,7 +37,8 @@ def get_data(filename, header, dtypes):
       pltdata  - data as numpy data array.
 
     """
-    pltdata = np.genfromtxt(filename, delimiter=',', names=header, dtype=dtypes)
+    pltdata = np.genfromtxt(filename, delimiter=',', names=header,
+                            dtype=dtypes)
 
     pid = pltdata['PID']
     user = pltdata['USER']
@@ -151,12 +155,12 @@ def main():
     fname = options.filename
     xfld = options.xfield
     yfld = options.yfield
-    itm  = options.item
+    itm = options.item
     aentry = []
 
     plt.xlabel(xfld)
     plt.ylabel(yfld)
-    plt.title("%s vs %s for %s" %(xfld,yfld,itm))
+    plt.title("%s vs %s for %s" % (xfld, yfld, itm))
 
     if os.path.exists(fname):
         data, pdata = get_data(fname, csv_header, csv_dtypes)
@@ -189,7 +193,6 @@ def main():
             plot_graphic(xplot, yplot, 'ro')
 
         cli.close()
-
 
 
 if __name__ == "__main__":

@@ -6,8 +6,6 @@ import procParse
 from procParse import procParser
 
 
-csv_header = ['PID','USER','PR','NI','VIRT','RES','SHR','S','%CPU','%MEM','TIME+','COMMAND']
-
 def create_server():
     # creating a server socket object for a connection.
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,8 +51,8 @@ def main():
         # send parsed data here.
         for fp in glob.glob('/proc/[0-9]*/'):
             if os.path.exists(fp):
-               topcsv = procParser(ps, fp)
-               send_data(cli, topcsv)
+                topcsv = procParser(ps, fp)
+                send_data(cli, topcsv)
 
 
 if __name__ == "__main__":
