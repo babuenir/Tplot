@@ -57,8 +57,16 @@ detail like resources they use.
 
 ## Further tasks
 
+  * Include factory method to select transport method, which can be
+    serial, socket etc.
+
+  * Provide methodology for calculating, stack, heap, rss, pss,
+    network load, threads within a process etc.
+
+  * Mechanism to generate a report out of the plots as pdf.
+
   * Versioning scheme need to be introduced. Mostly adhere to semantic
-	versioning scheme.
+    versioning scheme.
 
   * Changelog for each revision needs to be added.
 
